@@ -33,7 +33,7 @@ const ProductPage = (props) => {
   );
   const [activeSize, setActiveSize] = useState(sampleProduct.sizeOptions[0]);
   const suggestions = generateMockProductData(4, 'woman');
-  const [qrCode, setQrCode] = useState('loading')
+  const [qrCode, setQrCode] = useState('/empty-qr.svg');
 
   React.useEffect(() => {
     // Make QR code to instant-buy this product.
@@ -45,7 +45,7 @@ const ProductPage = (props) => {
       body: JSON.stringify({
         line_items: [{
           amount: sampleProduct.price * 100,
-          description: sampleProduct.name,
+          description: `${sampleProduct.name} (${activeSize})`,
           quantity: qty >= 1 ? qtr : 1,
           image: `${SITE_URL}${sampleProduct.image}`,
         }]
@@ -59,7 +59,7 @@ const ProductPage = (props) => {
         }
         setQrCode(`${resp.session_url}/qr.svg`)
       })
-  });
+  }, [qty]);
 
   return (
     <Layout>
@@ -133,7 +133,7 @@ const ProductPage = (props) => {
               </div>
 
               <div className={styles.description}>
-                <p>{qrCode}</p>
+                <img src={qrCode} width={'350'} height={'350'} />
                 <p>{sampleProduct.description}</p>
                 <span>Product code: {sampleProduct.productCode}</span>
               </div>

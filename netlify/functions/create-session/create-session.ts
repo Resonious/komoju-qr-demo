@@ -7,8 +7,12 @@ export const handler: Handler = async (event, _context) => {
   const response = await fetch('https://komoju.com/api/v1/sessions', {
     method: 'POST',
     body: JSON.stringify({
+      default_locale: 'en',
       currency: 'USD',
-      line_items: body.line_items
+      line_items: body.line_items,
+      payment_types: [
+        'credit_card', 'konbini', 'paypay', 'linepay', 'merpay'
+      ]
     }),
     headers: {
       'content-type': 'application/json',
