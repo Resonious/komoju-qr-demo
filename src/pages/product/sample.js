@@ -52,7 +52,13 @@ const ProductPage = (props) => {
       })
     })
       .then(r => r.json())
-      .then(resp => setQrCode(resp))
+      .then(resp => {
+        if (!resp.session_url) {
+          console.error(resp)
+          return
+        }
+        setQrCode(`${resp.session_url}/qr.svg`)
+      })
   });
 
   return (
