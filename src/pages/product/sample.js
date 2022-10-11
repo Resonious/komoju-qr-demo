@@ -59,7 +59,7 @@ const ProductPage = (props) => {
         }
         setQrCode(`${resp.session_url}/qr.svg`)
       })
-  }, [qty]);
+  }, [qty, activeSize]);
 
   return (
     <Layout>
@@ -133,6 +133,7 @@ const ProductPage = (props) => {
               </div>
 
               <div className={styles.description}>
+                <p>OR, scan to buy now</p>
                 <img src={qrCode} width={'350'} height={'350'} />
                 <p>{sampleProduct.description}</p>
                 <span>Product code: {sampleProduct.productCode}</span>
