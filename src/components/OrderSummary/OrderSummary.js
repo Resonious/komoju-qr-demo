@@ -7,6 +7,8 @@ import CurrencyFormatter from '../CurrencyFormatter';
 
 import * as styles from './OrderSummary.module.css';
 
+const SITE_URL = 'https://komoju-qr-demo.netlify.app';
+
 const OrderSummary = ({ sampleProduct }) => {
   const [coupon, setCoupon] = useState('');
   const [giftCard, setGiftCard] = useState('');
