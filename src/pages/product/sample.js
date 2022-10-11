@@ -35,22 +35,25 @@ const ProductPage = (props) => {
   const suggestions = generateMockProductData(4, 'woman');
   const [qrCode, setQrCode] = useState('loading')
 
-  fetch('/.netlify/functions/create-session', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify({
-      line_items: [{
-        amount: sampleProduct.price * 100,
-        description: sampleProduct.name,
-        quantity: qty,
-        image: `${SITE_URL}${sampleProduct.image}`,
-      }]
+  React.useEffect(() => {
+    // Make QR code to instant-buy this product.
+    fetch('/.netlify/functions/create-session', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        line_items: [{
+          amount: sampleProduct.price * 100,
+          description: sampleProduct.name,
+          quantity: qty,
+          image: `${SITE_URL}${sampleProduct.image}`,
+        }]
+      })
     })
-  })
-    .then(r => r.json())
-    .then(resp => setQrCode(resp))
+      .then(r => r.json())
+      .then(resp => setQrCode(resp))
+  });
 
   return (
     <Layout>
