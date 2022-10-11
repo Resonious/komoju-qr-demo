@@ -12,7 +12,8 @@ export const handler: Handler = async (event, _context) => {
       line_items: body.line_items,
       payment_types: [
         'credit_card', 'konbini', 'paypay', 'linepay', 'merpay'
-      ]
+      ],
+      return_url: 'https://komoju-qr-demo.netlify.app/orderConfirm'
     }),
     headers: {
       'content-type': 'application/json',

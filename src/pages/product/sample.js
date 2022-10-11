@@ -34,6 +34,7 @@ const ProductPage = (props) => {
   const [activeSize, setActiveSize] = useState(sampleProduct.sizeOptions[0]);
   const suggestions = generateMockProductData(4, 'woman');
   const [qrCode, setQrCode] = useState('/empty-qr.svg');
+  const [sessionUUID, setSessionUUID] = useState(null);
 
   React.useEffect(() => {
     // Make QR code to instant-buy this product.
@@ -58,8 +59,33 @@ const ProductPage = (props) => {
           return
         }
         setQrCode(`${resp.session_url}/qr.svg`)
+        setSessionUUID(sessionUUID);
       })
   }, [qty, activeSize]);
+
+  React.useEffect(() => {
+    // Poll for updates
+    if (!sessionUUID) return;
+
+    const interval = setInterval(() => {
+      fetch(`/.netlify/functions/check-session?session=${sessionUUID}`)
+        .then(r => r.json())
+        .then(resp => {
+          if (!resp.status) {
+            console.error(resp);
+            return;
+          }
+          if (resp.status !== 'completed') {
+            return;
+          }
+          location.href = '/orderConfirm';
+        });
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [sessionUUID]);
 
   return (
     <Layout>
