@@ -1,4 +1,5 @@
 import { Handler } from '@netlify/functions'
+import fetch from 'node-fetch'
 
 export const handler: Handler = async (event, _context) => {
   const body = JSON.parse(event.body)
