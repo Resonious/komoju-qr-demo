@@ -59,7 +59,7 @@ const ProductPage = (props) => {
           return
         }
         setQrCode(`${resp.session_url}/qr.svg`)
-        setSessionUUID(sessionUUID);
+        setSessionUUID(resp.id);
       })
   }, [qty, activeSize]);
 
@@ -133,13 +133,15 @@ const ProductPage = (props) => {
               </div>
 
               <div className={styles.actionContainer}>
+                <p>Scan to buy now</p>
+                <img src={qrCode} width={'350'} height={'350'} />
                 <div className={styles.addToButtonContainer}>
                   <Button
                     onClick={() => showNotification()}
                     fullWidth
                     level={'primary'}
                   >
-                    Add to Bag
+                    Or, Add to Bag
                   </Button>
                 </div>
                 <div
@@ -159,8 +161,6 @@ const ProductPage = (props) => {
               </div>
 
               <div className={styles.description}>
-                <p>OR, scan to buy now</p>
-                <img src={qrCode} width={'350'} height={'350'} />
                 <p>{sampleProduct.description}</p>
                 <span>Product code: {sampleProduct.productCode}</span>
               </div>
