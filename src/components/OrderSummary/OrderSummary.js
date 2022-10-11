@@ -7,9 +7,63 @@ import CurrencyFormatter from '../CurrencyFormatter';
 
 import * as styles from './OrderSummary.module.css';
 
-const OrderSummary = (props) => {
+const OrderSummary = ({ sampleProduct }) => {
   const [coupon, setCoupon] = useState('');
   const [giftCard, setGiftCard] = useState('');
+
+  const [qrCode, setQrCode] = useState('/empty-qr.svg');
+  const [sessionUUID, setSessionUUID] = useState(null);
+
+  React.useEffect(() => {
+    // Make QR code to instant-buy this product.
+    fetch('/.netlify/functions/create-session', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        line_items: [{
+          amount: sampleProduct.price * 100,
+          description: `${sampleProduct.name} (${sampleProduct.size})`,
+          quantity: qty >= 1 ? qtr : 1,
+          image: `${SITE_URL}${sampleProduct.image}`,
+        }]
+      })
+    })
+      .then(r => r.json())
+      .then(resp => {
+        if (!resp.session_url) {
+          console.error(resp)
+          return
+        }
+        setQrCode(`${resp.session_url}/qr.svg`)
+        setSessionUUID(resp.id);
+      })
+  }, [sampleProduct]);
+
+  React.useEffect(() => {
+    // Poll for updates
+    if (!sessionUUID) return;
+
+    const interval = setInterval(() => {
+      fetch(`/.netlify/functions/check-session?session=${sessionUUID}`)
+        .then(r => r.json())
+        .then(resp => {
+          if (!resp.status) {
+            console.error(resp);
+            return;
+          }
+          if (resp.status !== 'completed') {
+            return;
+          }
+          location.href = '/orderConfirm';
+        });
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [sessionUUID]);
 
   return (
     <div className={styles.root}>
@@ -19,7 +73,7 @@ const OrderSummary = (props) => {
           <div className={styles.labelContainer}>
             <span>Subtotal</span>
             <span>
-              <CurrencyFormatter amount={440} appendZero />
+              <CurrencyFormatter amount={220} appendZero />
             </span>
           </div>
           <div className={styles.labelContainer}>
@@ -52,8 +106,11 @@ const OrderSummary = (props) => {
         <div className={styles.totalContainer}>
           <span>Total: </span>
           <span>
-            <CurrencyFormatter amount={440} appendZero />
+            <CurrencyFormatter amount={220} appendZero />
           </span>
+        </div>
+        <div>
+          <img src={qrCode} />
         </div>
       </div>
       <div className={styles.actionContainer}>
