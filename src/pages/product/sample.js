@@ -46,7 +46,7 @@ const ProductPage = (props) => {
         line_items: [{
           amount: sampleProduct.price * 100,
           description: sampleProduct.name,
-          quantity: qty,
+          quantity: qty >= 1 ? qtr : 1,
           image: `${SITE_URL}${sampleProduct.image}`,
         }]
       })
