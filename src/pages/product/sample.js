@@ -21,7 +21,7 @@ import { navigate } from 'gatsby';
 import AddItemNotificationContext from '../../context/AddItemNotificationProvider';
 
 const SITE_URL = 'https://komoju-qr-demo.netlify.app';
-const [qrCode, setQrCode] = useState(null)
+const [qrCode, setQrCode] = useState('loading')
 
 const ProductPage = (props) => {
   const ctxAddItemNotification = useContext(AddItemNotificationContext);
