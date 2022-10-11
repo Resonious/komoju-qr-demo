@@ -25,7 +25,7 @@ const OrderSummary = ({ sampleProduct }) => {
         line_items: [{
           amount: sampleProduct.price * 100,
           description: `${sampleProduct.name} (${sampleProduct.size})`,
-          quantity: qty >= 1 ? qtr : 1,
+          quantity: 1,
           image: `${SITE_URL}${sampleProduct.image}`,
         }]
       })
