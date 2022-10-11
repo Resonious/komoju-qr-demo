@@ -20,6 +20,9 @@ import { navigate } from 'gatsby';
 
 import AddItemNotificationContext from '../../context/AddItemNotificationProvider';
 
+const SITE_URL = 'https://komoju-qr-demo.netlify.app';
+const [qrCode, setQrCode] = useState(null)
+
 const ProductPage = (props) => {
   const ctxAddItemNotification = useContext(AddItemNotificationContext);
   const showNotification = ctxAddItemNotification.showNotification;
@@ -31,6 +34,23 @@ const ProductPage = (props) => {
   );
   const [activeSize, setActiveSize] = useState(sampleProduct.sizeOptions[0]);
   const suggestions = generateMockProductData(4, 'woman');
+
+  fetch('/.netlify/functions/create-session', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      line_items: [{
+        amount: sampleProduct.price * 100,
+        description: sampleProduct.name,
+        quantity: qty,
+        image: `${SITE_URL}${sampleProduct.image}`,
+      }]
+    })
+  })
+    .then(r => r.json())
+    .then(resp => setQrCode(resp))
 
   return (
     <Layout>
@@ -104,6 +124,7 @@ const ProductPage = (props) => {
               </div>
 
               <div className={styles.description}>
+                <p>{qrCode}</p>
                 <p>{sampleProduct.description}</p>
                 <span>Product code: {sampleProduct.productCode}</span>
               </div>
